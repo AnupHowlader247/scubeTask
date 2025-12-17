@@ -37,7 +37,7 @@ class EnergyDetailPage extends StatefulWidget {
 }
 
 class _EnergyDetailPageState extends State<EnergyDetailPage> {
-  bool isRevenueView = false;
+  bool isRevenueView = false;  // Flag to toggle between views
   bool isToday = true;
   DateTime? fromDate;
   DateTime? toDate;
@@ -126,9 +126,7 @@ class EnergyMainCard extends StatefulWidget {
 
 class _EnergyMainCardState extends State<EnergyMainCard> {
   final double progressValue = 55;
-
   /* ---------------- MOCK DATA ---------------- */
-
   final List<EnergyData> mockEnergyData = [
     EnergyData(
       date: DateTime.now(),
@@ -190,59 +188,68 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: const Color(0xFFB9C7D9)),
+            //border: Border.all(color: const Color(0xFFB9C7D9)),
           ),
           child: Column(
             children: [
-              SleekCircularSlider(
-                min: 0,
-                max: 100,
-                initialValue: progressValue,
-                appearance: CircularSliderAppearance(
-                  startAngle: 150,
-                  angleRange: 240,
-                  size: 200,
-                  customWidths: CustomSliderWidths(
-                    progressBarWidth: 12,
-                    trackWidth: 12,
-                  ),
-                  customColors: CustomSliderColors(
-                    progressBarColor: const Color(0xFF1296F3),
-                    trackColor: Colors.grey.shade300,
-                  ),
-                  infoProperties: InfoProperties(
-                    modifier: (double value) {
-                      return value.toStringAsFixed(2); // 🔥 DOUBLE VALUE ONLY
-                    },
-                    mainLabelStyle: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF04063E),
+              // Show the progress indicator only for Data View
+              if (!widget.isRevenueView)
+                SleekCircularSlider(
+                  min: 0,
+                  max: 100,
+                  initialValue: progressValue,
+                  appearance: CircularSliderAppearance(
+                    startAngle: 150,
+                    angleRange: 240,
+                    size: 200,
+                    customWidths: CustomSliderWidths(
+                      progressBarWidth: 12,
+                      trackWidth: 12,
                     ),
-                    bottomLabelText: "kWh/Sqft",
-                    bottomLabelStyle: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w500,
+                    customColors: CustomSliderColors(
+                      progressBarColor: const Color(0xFF1296F3),
+                      trackColor: Colors.grey.shade300,
+                    ),
+                    infoProperties: InfoProperties(
+                      modifier: (double value) {
+                        return value.toStringAsFixed(2); // 🔥 DOUBLE VALUE ONLY
+                      },
+                      mainLabelStyle: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF04063E),
+                      ),
+                      bottomLabelText: "kWh/Sqft",
+                      bottomLabelStyle: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _radio("Today Data", widget.isToday, widget.onTodayDataPressed),
-                  const SizedBox(width: 24),
-                  _radio("Custom Date Data", !widget.isToday,
-                      widget.onCustomDataPressed),
-                ],
-              ),
+              // Show the buttons only for Data View
+              if (!widget.isRevenueView) ...[
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _radio("Today Data", widget.isToday, widget.onTodayDataPressed),
+                    const SizedBox(width: 24),
+                    _radio("Custom Date Data", !widget.isToday,
+                        widget.onCustomDataPressed),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                if (!widget.isToday) _buildCustomDatePicker(),
+              ],
+
               const SizedBox(height: 20),
-              if (!widget.isToday) _buildCustomDatePicker(),
-              const SizedBox(height: 20),
-              if (widget.isToday || widget.showData) _buildEnergyCharts(),
+
+              // Display only relevant view based on the toggle (Revenue or Data View)
+              if (widget.isRevenueView) _buildRevenueView(), // Show Revenue View
+              if (!widget.isRevenueView && (widget.isToday || widget.showData)) _buildEnergyCharts(), // Show Data View
             ],
           ),
         ),
@@ -250,11 +257,28 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
           top: 0,
           left: 16,
           right: 16,
-          child: TopSwitch(
-            isRevenue: widget.isRevenueView,
-            onChanged: widget.onSwitchChanged,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              // 🔹 MASK to hide border behind
+              Container(
+                height: 48,
+                margin: const EdgeInsets.symmetric(horizontal: 6),
+                decoration: BoxDecoration(
+                  color: Colors.white, // same as card background
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+
+              // 🔹 ACTUAL SWITCH
+              TopSwitch(
+                isRevenue: widget.isRevenueView,
+                onChanged: widget.onSwitchChanged,
+              ),
+            ],
           ),
         ),
+
       ],
     );
   }
@@ -381,11 +405,175 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
       ),
     );
   }
-}
 
-/* =========================================================
-   ROW + SWITCH (UNCHANGED)
-   ========================================================= */
+  Widget _buildRevenueView() {
+    // This will display the revenue view content when Revenue View is selected
+    return Column(
+      children: [
+        SleekCircularSlider(
+          min: 0,
+          max: 100000,
+          initialValue: 88174, // Mock value
+          appearance: CircularSliderAppearance(
+            startAngle: 150,
+            angleRange: 240,
+            size: 200,
+            customWidths: CustomSliderWidths(
+              progressBarWidth: 12,
+              trackWidth: 12,
+            ),
+            customColors: CustomSliderColors(
+              progressBarColor: const Color(0xFF1296F3),
+              trackColor: Colors.grey.shade300,
+            ),
+            infoProperties: InfoProperties(
+              modifier: (double value) {
+                return value.toStringAsFixed(2); // 🔥 DOUBLE VALUE ONLY
+              },
+              mainLabelStyle: const TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF04063E),
+              ),
+              bottomLabelText: "tk",
+              bottomLabelStyle: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            //border: Border.all(color: const Color(0xFFB9C7D9)),
+          ),
+          child: Column(
+            children: [
+              _revenueRow("Data 1", "2798.50", "35689 ৳"),
+
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _revenueRow(String title, String data, String cost) {
+
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Stack(
+          clipBehavior: Clip.none, // IMPORTANT for overlap
+          children: [
+
+            /// 🔹 OUTER CONTAINER (DATA BOX)
+            Container(
+              margin: const EdgeInsets.only(top: 30),
+              padding: const EdgeInsets.fromLTRB(16, 70, 0, 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.black26, width: 1.2),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                    _dataCostRow("1", data, cost),
+                    _dataCostRow("2", data, cost),
+                    _dataCostRow("3", data, cost),
+                    _dataCostRow("4", data, cost),
+
+                ],
+              ),
+            ),
+
+            /// 🔹 OVERLAPPING HEADER
+            Positioned(
+              top: 31,
+              left: 1,
+              right: 1,
+              child: Container(
+                height: 60,
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.black26, width: 1.2),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.bar_chart, color: Colors.black26),
+                    const SizedBox(width: 10),
+                    const Text(
+                      "Data & Cost Info",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Spacer(),
+
+                    /// Toggle Button
+                    CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      child: IconButton(
+                        icon: Icon(
+
+                             Icons.keyboard_double_arrow_up,
+                              //: Icons.keyboard_double_arrow_down,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+
+                           // _isExpanded = !_isExpanded;
+
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+// Row that will display data and cost for each entry
+  Widget _dataCostRow(String number, String data, String cost) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Data line with data value and percentage
+          Row(
+            children: [
+              Text("Data $number: $data", style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(width: 8),
+              Text("($data%)", style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+          // Cost line
+          Padding(
+            padding: const EdgeInsets.only(left: 0),
+            child: Row(
+              children: [
+                Text("Cost $number: $cost", style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+}
 
 
 
@@ -484,7 +672,7 @@ class TopSwitch extends StatelessWidget {
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: const Color(0xFFB9C7D9)),
       ),
       child: Row(
@@ -496,19 +684,37 @@ class TopSwitch extends StatelessWidget {
     );
   }
 
-  Widget _item(String t, bool a, VoidCallback onTap) {
+  Widget _item(String t, bool active, VoidCallback onTap) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
-        child: Center(
-          child: Text(
-            t,
-            style: TextStyle(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // 🔵 Circle indicator
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: active ? Colors.blue : Colors.grey.shade400,
+              ),
+            ),
+            const SizedBox(width: 8),
+
+            // Label
+            Text(
+              t,
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: a ? Colors.blue : Colors.grey),
-          ),
+                color: active ? Colors.blue : Colors.grey,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
 }
+

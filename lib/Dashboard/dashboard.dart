@@ -4,6 +4,7 @@ import 'package:taskapp/Dashboard/total_power.dart';
 import '../appbar.dart';
 import '../energy_detail_page.dart';
 import '../safe_assets.dart';
+import '../sld_data.dart';
 
 class SCMDashboardPage extends StatefulWidget {
   const SCMDashboardPage({super.key});
@@ -33,7 +34,7 @@ class _SCMDashboardPageState extends State<SCMDashboardPage> {
           padding: EdgeInsets.symmetric(horizontal: w * 0.045),
           child: Column(
             children: [
-              /// 🔹 MAIN SCROLLABLE CONTAINER
+
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(18),
@@ -465,7 +466,14 @@ class _DataRow extends StatelessWidget {
   }
 }
 
-/// ==================== BOTTOM MENU ====================
+
+void _openPage(BuildContext context, Widget page) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (_) => page),
+  );
+}
+
 class _BottomMenuGrid extends StatelessWidget {
   const _BottomMenuGrid();
 
@@ -479,12 +487,7 @@ class _BottomMenuGrid extends StatelessWidget {
               child: _MenuButton(
                 iconPath: "assets/dashboard/analysis.png",
                 label: "Analysis Pro",
-                onTap: () {
-                 /* Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => AnalysisPage()),
-                  );*/
-                },
+                onTap: () => _openPage(context, const SldDataPage()),
               ),
             ),
             const SizedBox(width: 10),
@@ -492,29 +495,20 @@ class _BottomMenuGrid extends StatelessWidget {
               child: _MenuButton(
                 iconPath: "assets/dashboard/generator.png",
                 label: "G. Generator",
-                onTap: () {
-                /*  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => GeneratorPage()),
-                  );*/
-                },
+                onTap: () => _openPage(context, const SldDataPage()),
               ),
             ),
           ],
         ),
         const SizedBox(height: 10),
+
         Row(
           children: [
             Expanded(
               child: _MenuButton(
                 iconPath: "assets/dashboard/plant.png",
                 label: "Plant Summery",
-                onTap: () {
-                 /* Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PlantSummaryPage()),
-                  );*/
-                },
+                onTap: () => _openPage(context, const SldDataPage()),
               ),
             ),
             const SizedBox(width: 10),
@@ -522,29 +516,20 @@ class _BottomMenuGrid extends StatelessWidget {
               child: _MenuButton(
                 iconPath: "assets/dashboard/gas.png",
                 label: "Natural Gas",
-                onTap: () {
-                  /*Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => GasPage()),
-                  );*/
-                },
+                onTap: () => _openPage(context, const SldDataPage()),
               ),
             ),
           ],
         ),
         const SizedBox(height: 10),
+
         Row(
           children: [
             Expanded(
               child: _MenuButton(
                 iconPath: "assets/dashboard/generator.png",
                 label: "D. Generator",
-                /*onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => DGeneratorPage()),
-                  );
-                },*/
+                onTap: () => _openPage(context, const SldDataPage()),
               ),
             ),
             const SizedBox(width: 10),
@@ -552,18 +537,14 @@ class _BottomMenuGrid extends StatelessWidget {
               child: _MenuButton(
                 iconPath: "assets/dashboard/water.png",
                 label: "Water Process",
-               /* onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => WaterProcessPage()),
-                  );
-                },*/
+                onTap: () => _openPage(context, const SldDataPage()),
               ),
             ),
           ],
         ),
       ],
     );
+
   }
 }
 
@@ -575,14 +556,14 @@ class _MenuButton extends StatelessWidget {
   const _MenuButton({
     required this.iconPath,
     required this.label,
-    this.onTap, // <-- constructor
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap, // <-- handle tap
-      borderRadius: BorderRadius.circular(14), // ripple effect
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
       child: Container(
         height: 56,
         decoration: BoxDecoration(
