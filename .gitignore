@@ -1,0 +1,70 @@
+# ───────────────────────────────────────────────────────────────
+# Miscellaneous
+# ───────────────────────────────────────────────────────────────
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# ───────────────────────────────────────────────────────────────
+# IDEs
+# ───────────────────────────────────────────────────────────────
+*.iml
+*.ipr
+*.iws
+.idea/
+#.vscode/   # keep commented if you want to commit VS Code tasks/launch
+
+# ───────────────────────────────────────────────────────────────
+# Flutter / Dart / Pub
+# ───────────────────────────────────────────────────────────────
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+# Legacy (harmless if not generated anymore)
+.packages
+
+# Generated registrant (for web and some platforms)
+lib/generated_plugin_registrant.dart
+
+# Coverage
+coverage/
+
+# ───────────────────────────────────────────────────────────────
+# iOS / macOS (CocoaPods + Flutter ephemeral)
+# ───────────────────────────────────────────────────────────────
+/ios/Pods/
+/macos/Pods/
+**/Flutter/ephemeral/
+
+# ───────────────────────────────────────────────────────────────
+# Android
+# ───────────────────────────────────────────────────────────────
+/android/.gradle/
+/android/local.properties
+/android/key.properties
+/android/app/debug
+/android/app/profile
+/android/app/release
+# Keystores (never commit signing keys)
+**/*.keystore
+**/*.jks
+
+# ───────────────────────────────────────────────────────────────
+# Symbolication / Obfuscation
+# ───────────────────────────────────────────────────────────────
+app.*.symbols
+app.*.map.json
