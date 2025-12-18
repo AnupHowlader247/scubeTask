@@ -31,16 +31,16 @@ class _SCMDashboardPageState extends State<SCMDashboardPage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: w * 0.045),
+          padding: EdgeInsets.symmetric(horizontal: w * 0.055),
           child: Column(
             children: [
-
+              SizedBox(height: 20,),
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(18),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF7FAFF),
+                      color: Colors.white,
                       border: Border.all(color: const Color(0xFFB9C7D9)),
                     ),
                     child: SingleChildScrollView(
@@ -52,7 +52,7 @@ class _SCMDashboardPageState extends State<SCMDashboardPage> {
                             onChanged: (i) =>
                                 setState(() => topTabIndex = i),
                           ),
-                          const SizedBox(height: 6),
+SizedBox(height: 4,),
                           const Text(
                             "Electricity",
                             style: TextStyle(
@@ -61,7 +61,7 @@ class _SCMDashboardPageState extends State<SCMDashboardPage> {
                               color: Color(0xFF7B8794),
                             ),
                           ),
-                          const Divider(height: 30),
+                          const Divider(height: 25),
                           const TotalPowerRing(
                             valueText: "5.53",
                             unitText: "kw",
@@ -74,12 +74,14 @@ class _SCMDashboardPageState extends State<SCMDashboardPage> {
                             onChanged: (v) =>
                                 setState(() => sourceSelected = v),
                           ),
-                          const SizedBox(height: 14),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0,right: 8),
+                            child: Divider(),
+                          ),
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             child: _ScrollableDataContainer(),
                           ),
-                          const SizedBox(height: 18),
                         ],
                       ),
                     ),
@@ -111,16 +113,16 @@ class _ScrollableDataContainer extends StatelessWidget {
       height: 290, // ✅ shows at least 3 full rows
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFEFF6FF),
+
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFB9C7D9)),
+         // border: Border.all(color: const Color(0xFFB9C7D9)),
         ),
         child: Scrollbar(
           thumbVisibility: true,
           thickness: 4,
           radius: const Radius.circular(8),
           child: ListView(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(2),
             physics: const AlwaysScrollableScrollPhysics(),
             children:  [
               _DataCard(
@@ -193,23 +195,7 @@ class _ScrollableDataContainer extends StatelessWidget {
                   );
                 },
               ),
-              _DataCard(
-                iconPath: "assets/dashboard/cell.png",
-                title: "Data View",
-                statusText: "Active",
-                statusColor: Color(0xFF1F6FEB),
-                colorDot: Color(0xFF5AA7FF),
-                data1: "55505.63",
-                data2: "58805.63",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const EnergyDetailPage(title: "Data View"),
-                    ),
-                  );
-                },
-              ),
+
             ],
           ),
         ),
@@ -230,7 +216,7 @@ class _TopTabs extends StatelessWidget {
     final labels = ["Summery", "SLD", "Data"];
 
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.only(left: 0,right: 0),
       child: Container(
         height: 42,
         decoration: BoxDecoration(
@@ -285,9 +271,9 @@ class _SegmentToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 36),
       child: Container(
-        height: 44,
+        height: 34,
         decoration: BoxDecoration(
           color: const Color(0xFFE8EEF7),
           borderRadius: BorderRadius.circular(22),
@@ -317,7 +303,7 @@ class _SegmentToggle extends StatelessWidget {
                       child: Text(
                         leftText,
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: isLeftSelected
                               ? Colors.white
@@ -334,7 +320,7 @@ class _SegmentToggle extends StatelessWidget {
                       child: Text(
                         rightText,
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: !isLeftSelected
                               ? Colors.white
@@ -381,7 +367,7 @@ class _DataCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,
       child: Container(
-        height: 75,
+        height: 66,
         decoration: BoxDecoration(
           color: const Color(0xFFEFF6FF),
           borderRadius: BorderRadius.circular(12),
@@ -398,7 +384,7 @@ class _DataCard extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
+                padding: const EdgeInsets.symmetric(vertical: 3),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -430,7 +416,7 @@ class _DataCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
                     _DataRow(label: "Data 1", value: data1),
                     _DataRow(label: "Data 2", value: data2),
                   ],
@@ -500,7 +486,7 @@ class _BottomMenuGrid extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 7),
 
         Row(
           children: [
@@ -511,7 +497,7 @@ class _BottomMenuGrid extends StatelessWidget {
                 onTap: () => _openPage(context, const SldDataPage()),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 7),
             Expanded(
               child: _MenuButton(
                 iconPath: "assets/dashboard/gas.png",
@@ -521,7 +507,7 @@ class _BottomMenuGrid extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 7),
 
         Row(
           children: [
@@ -565,7 +551,7 @@ class _MenuButton extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(14),
       child: Container(
-        height: 56,
+        height: 43,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),

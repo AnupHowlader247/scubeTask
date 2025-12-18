@@ -31,9 +31,8 @@ class _LoginPageState extends State<LoginPage> {
                 child: IntrinsicHeight(
                   child: Column(
                     children: [
-                      SizedBox(height: context.rSpace(40)),
+                      SizedBox(height: context.rSpace(70)),
 
-                      /// Logo
                       Image.asset(
                         'assets/login.png',
                         height: context.rSpace(120),
@@ -56,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
                         'Control & Monitoring System',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: context.rText(14),
+                          fontSize: context.rText(20),
+                          fontWeight: FontWeight.bold
                         ),
                       ),
 
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: Responsive.symmetric(
                           context,
                           horizontal: 24,
-                          vertical: 30,
+                          vertical: 62,
                         ),
                         decoration: const BoxDecoration(
                           color: Colors.white,
@@ -158,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                             /// Login button
                             SizedBox(
                               width: double.infinity,
-                              height: context.rSpace(48),
+                              height: context.rSpace(58),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF0096FC),
@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
 
-                            SizedBox(height: context.rSpace(24)),
+                            SizedBox(height: context.rSpace(10)),
 
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

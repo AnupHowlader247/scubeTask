@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../appbar.dart';
 
 
@@ -31,6 +30,7 @@ class _SCMDashboardPageState extends State<SldDataPage> {
           padding: EdgeInsets.symmetric(horizontal: w * 0.045),
           child: Column(
             children: [
+              SizedBox(height: 20,),
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(18),

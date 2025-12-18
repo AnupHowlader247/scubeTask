@@ -203,12 +203,12 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
                     angleRange: 240,
                     size: 200,
                     customWidths: CustomSliderWidths(
-                      progressBarWidth: 12,
-                      trackWidth: 12,
+                      progressBarWidth: 17,
+                      trackWidth: 17,
                     ),
                     customColors: CustomSliderColors(
-                      progressBarColor: const Color(0xFF1296F3),
-                      trackColor: Colors.grey.shade300,
+                      progressBarColor: const  Color(0xFF4E91FD),
+                      trackColor: Color(0xFFBDF8FE).withOpacity(0.5),
                     ),
                     infoProperties: InfoProperties(
                       modifier: (double value) {
@@ -288,23 +288,14 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
       onTap: onTap,
       child: Row(
         children: [
+          // 🔵 Circle indicator
           Container(
-            width: 14,
-            height: 14,
+            width: 12,
+            height: 12,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                color: selected ? const Color(0xFF1296F3) : Colors.grey,
-              ),
+              color: selected ? Colors.blue : Colors.grey.shade400,
             ),
-            child: selected
-                ? const Center(
-              child: CircleAvatar(
-                radius: 3,
-                backgroundColor: Color(0xFF1296F3),
-              ),
-            )
-                : null,
           ),
           const SizedBox(width: 6),
           Text(
@@ -322,39 +313,43 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
   }
 
   Widget _buildCustomDatePicker() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _dateBtn("From Date", () async {
-          final d = await showDatePicker(
-            context: context,
-            initialDate: widget.fromDate ?? DateTime.now(),
-            firstDate: DateTime(2000),
-            lastDate: DateTime(2101),
-          );
-          widget.onCustomDateChanged({'from': d, 'to': widget.toDate});
-        }),
-        _dateBtn("To Date", () async {
-          final d = await showDatePicker(
-            context: context,
-            initialDate: widget.toDate ?? DateTime.now(),
-            firstDate: DateTime(2000),
-            lastDate: DateTime(2101),
-          );
-          widget.onCustomDateChanged({'from': widget.fromDate, 'to': d});
-        }),
-        GestureDetector(
-          onTap: widget.onSearchPressed,
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blue),
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0),
+      child: Row(
+        children: [
+          _dateBtn("From Date", () async {
+            final d = await showDatePicker(
+              context: context,
+              initialDate: widget.fromDate ?? DateTime.now(),
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2101),
+            );
+            widget.onCustomDateChanged({'from': d, 'to': widget.toDate});
+          }),
+          SizedBox(width: 10,),
+          _dateBtn("To Date", () async {
+            final d = await showDatePicker(
+              context: context,
+              initialDate: widget.toDate ?? DateTime.now(),
+              firstDate: DateTime(2000),
+              lastDate: DateTime(2101),
+            );
+            widget.onCustomDateChanged({'from': widget.fromDate, 'to': d});
+          }),
+          SizedBox(width: 10,),
+          GestureDetector(
+            onTap: widget.onSearchPressed,
+            child: Container(
+              padding: const EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blue),
+              ),
+              child: const Icon(Icons.search, color: Colors.blue),
             ),
-            child: const Icon(Icons.search, color: Colors.blue),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -392,17 +387,46 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
         border: Border.all(color: const Color(0xFFB9C7D9)),
       ),
       child: Column(
-        children: data
-            .map(
-              (e) => EnergyRow(
-            title: e.title,
-            data: "${e.value} (${e.percentage}%)",
-            cost: "${e.cost} ৳",
-            color: e.color,
+        children: [
+          // 🔹 STATIC ROW (always on top)
+          Padding(
+            padding: const EdgeInsets.only(left: 28.0,right: 28),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'Energy Chart',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '5.53 kw',
+                  style: TextStyle(
+                    fontSize: 34,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              ],
+            ),
           ),
-        )
-            .toList(),
-      ),
+
+          const SizedBox(height: 12),
+
+          // 🔹 DYNAMIC LIST
+          ...data.map(
+                (e) => EnergyRow(
+              title: e.title,
+              data: "${e.value} (${e.percentage}%)",
+              cost: "${e.cost} ৳",
+              color: e.color,
+            ),
+          ),
+        ],
+      )
+
     );
   }
 
@@ -419,12 +443,12 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
             angleRange: 240,
             size: 200,
             customWidths: CustomSliderWidths(
-              progressBarWidth: 12,
-              trackWidth: 12,
+              progressBarWidth: 17,
+              trackWidth: 17,
             ),
             customColors: CustomSliderColors(
-              progressBarColor: const Color(0xFF1296F3),
-              trackColor: Colors.grey.shade300,
+              progressBarColor: const Color(0xFF4E91FD),
+              trackColor: Color(0xFFBDF8FE).withOpacity(0.5),
             ),
             infoProperties: InfoProperties(
               modifier: (double value) {
@@ -463,44 +487,42 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
   }
 
   Widget _revenueRow(String title, String data, String cost) {
-
+    bool isExpanded = true; // ✅ MUST be outside builder
 
     return StatefulBuilder(
       builder: (context, setState) {
         return Stack(
-          clipBehavior: Clip.none, // IMPORTANT for overlap
+          clipBehavior: Clip.none,
           children: [
 
-            /// 🔹 OUTER CONTAINER (DATA BOX)
-            Container(
-              margin: const EdgeInsets.only(top: 30),
-              padding: const EdgeInsets.fromLTRB(16, 70, 0, 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.black26, width: 1.2),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
+            /// 🔹 DATA BOX (only when expanded)
+            if (isExpanded)
+              Container(
+                margin: const EdgeInsets.only(top: 30),
+                padding: const EdgeInsets.fromLTRB(16, 70, 0, 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.black26, width: 1.2),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     _dataCostRow("1", data, cost),
                     _dataCostRow("2", data, cost),
                     _dataCostRow("3", data, cost),
                     _dataCostRow("4", data, cost),
-
-                ],
+                  ],
+                ),
               ),
-            ),
 
-            /// 🔹 OVERLAPPING HEADER
+            /// 🔹 HEADER (always visible)
             Positioned(
               top: 31,
               left: 1,
               right: 1,
               child: Container(
                 height: 60,
-                width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -517,20 +539,20 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
                     ),
                     const Spacer(),
 
-                    /// Toggle Button
+                    /// 🔹 TOGGLE BUTTON
                     CircleAvatar(
                       backgroundColor: Colors.blue,
                       child: IconButton(
                         icon: Icon(
-
-                             Icons.keyboard_double_arrow_up,
-                              //: Icons.keyboard_double_arrow_down,
+                          isExpanded
+                              ? Icons.keyboard_double_arrow_up
+                              : Icons.keyboard_double_arrow_down,
                           color: Colors.white,
                         ),
                         onPressed: () {
-
-                           // _isExpanded = !_isExpanded;
-
+                          setState(() {
+                            isExpanded = !isExpanded;
+                          });
                         },
                       ),
                     ),
@@ -592,7 +614,7 @@ class EnergyRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.only(left: 10,right: 10,top: 4,bottom: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: const Color(0xFFB9C7D9)),
@@ -627,7 +649,7 @@ class EnergyRow extends StatelessWidget {
           // Vertical Line (Container with height and width)
           Container(
             width: 1,
-            height: 50, // Adjust this height to match the row height
+            height: 30, // Adjust this height to match the row height
             color: Colors.grey.shade400,
           ),
           SizedBox(width: 10),
@@ -637,7 +659,7 @@ class EnergyRow extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text("Data :     ",style: TextStyle(color: Colors.black26,fontWeight: FontWeight.bold,fontSize: 12
+                  Text("Data    :  ",style: TextStyle(color: Colors.black26,fontWeight: FontWeight.bold,fontSize: 12
                   ),),
                   Text("$data",style: TextStyle(color: Color(0xFF04063E),fontWeight: FontWeight.bold,fontSize: 12
                   ),),
@@ -645,7 +667,7 @@ class EnergyRow extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text("Cost :    ",style: TextStyle(color: Colors.black26,fontWeight: FontWeight.bold,fontSize: 12
+                  Text("Cost    :",style: TextStyle(color: Colors.black26,fontWeight: FontWeight.bold,fontSize: 12
                   ),),
                   Text(" $cost",style: TextStyle(color: Color(0xFF04063E),fontWeight: FontWeight.bold,fontSize: 12
                   ),),
@@ -691,14 +713,24 @@ class TopSwitch extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 🔵 Circle indicator
+
             Container(
-              width: 8,
-              height: 8,
+              width: 14,
+              height: 14,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: active ? Colors.blue : Colors.grey.shade400,
+                border: Border.all(
+                  color:  active? const Color(0xFF1296F3) : Colors.grey,
+                ),
               ),
+              child: active
+                  ? const Center(
+                child: CircleAvatar(
+                  radius: 3,
+                  backgroundColor: Color(0xFF1296F3),
+                ),
+              )
+                  : null,
             ),
             const SizedBox(width: 8),
 
