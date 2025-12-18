@@ -1,16 +1,27 @@
-# taskapp
+TaskApp – Flutter Assignment Project
 
-A new Flutter project.
+TaskApp is a Flutter-based mobile application developed as part of an assignment. The app focuses on clean UI implementation, structured code, and alignment with the provided Figma design.
 
-## Getting Started
+📱 Project Overview
 
-This project is a starting point for a Flutter application.
+Framework: Flutter
 
-A few resources to get you started if this is your first Flutter project:
+Architecture: Clean & modular widget-based structure
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+State Management: Flutter setState / basic state handling
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Platform: Android (can be extended to iOS)
+
+The application UI closely follows the provided Figma design, and all required screens have been completed.
+
+✨ Features
+
+Clean and responsive UI
+
+Well-structured and readable code
+
+Reusable widgets for better maintainability
+
+Smooth navigation between screens
+
+Follows Flutter best practices
