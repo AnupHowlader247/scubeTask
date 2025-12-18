@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 import '../appbar.dart';
-
-/* =========================================================
-   DATA MODEL
-   ========================================================= */
+import '../responsive.dart';
 
 class EnergyData {
   final DateTime date;
@@ -24,9 +21,6 @@ class EnergyData {
   });
 }
 
-/* =========================================================
-   PAGE
-   ========================================================= */
 
 class EnergyDetailPage extends StatefulWidget {
   final String title;
@@ -37,7 +31,7 @@ class EnergyDetailPage extends StatefulWidget {
 }
 
 class _EnergyDetailPageState extends State<EnergyDetailPage> {
-  bool isRevenueView = false;  // Flag to toggle between views
+  bool isRevenueView = false;
   bool isToday = true;
   DateTime? fromDate;
   DateTime? toDate;
@@ -54,7 +48,9 @@ class _EnergyDetailPageState extends State<EnergyDetailPage> {
         showBellDot: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 16, bottom: 16),
+        padding: EdgeInsets.symmetric(
+          vertical: context.rSpace(16),
+        ),
         child: EnergyMainCard(
           isRevenueView: isRevenueView,
           onSwitchChanged: (v) => setState(() => isRevenueView = v),
@@ -90,9 +86,6 @@ class _EnergyDetailPageState extends State<EnergyDetailPage> {
   }
 }
 
-/* =========================================================
-   MAIN CARD
-   ========================================================= */
 
 class EnergyMainCard extends StatefulWidget {
   final bool isRevenueView;
@@ -126,7 +119,7 @@ class EnergyMainCard extends StatefulWidget {
 
 class _EnergyMainCardState extends State<EnergyMainCard> {
   final double progressValue = 55;
-  /* ---------------- MOCK DATA ---------------- */
+
   final List<EnergyData> mockEnergyData = [
     EnergyData(
       date: DateTime.now(),
@@ -154,7 +147,7 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
     ),
   ];
 
-  /* ---------------- FILTER LOGIC ---------------- */
+
 
   List<EnergyData> getFilteredData() {
     final now = DateTime.now();
@@ -175,7 +168,7 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
     return [];
   }
 
-  /* ---------------- UI ---------------- */
+
 
   @override
   Widget build(BuildContext context) {
@@ -183,16 +176,21 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
       clipBehavior: Clip.none,
       children: [
         Container(
-          margin: const EdgeInsets.only(top: 26),
-          padding: const EdgeInsets.fromLTRB(16, 36, 16, 16),
+          margin: EdgeInsets.only(top: context.rSpace(26)),
+          padding: EdgeInsets.fromLTRB(
+            context.rSpace(16),
+            context.rSpace(36),
+            context.rSpace(16),
+            context.rSpace(16),
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            //border: Border.all(color: const Color(0xFFB9C7D9)),
+            borderRadius: BorderRadius.circular(context.rSpace(18)),
+
           ),
           child: Column(
             children: [
-              // Show the progress indicator only for Data View
+
               if (!widget.isRevenueView)
                 SleekCircularSlider(
                   min: 0,
@@ -201,27 +199,28 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
                   appearance: CircularSliderAppearance(
                     startAngle: 150,
                     angleRange: 240,
-                    size: 200,
+                    size: context.rSpace(200),
                     customWidths: CustomSliderWidths(
-                      progressBarWidth: 17,
-                      trackWidth: 17,
+                      progressBarWidth: context.rSpace(17),
+                      trackWidth: context.rSpace(17),
                     ),
                     customColors: CustomSliderColors(
-                      progressBarColor: const  Color(0xFF4E91FD),
-                      trackColor: Color(0xFFBDF8FE).withOpacity(0.5),
+                      progressBarColor: const Color(0xFF4E91FD),
+                      trackColor:
+                      const Color(0xFFBDF8FE).withOpacity(0.5),
                     ),
                     infoProperties: InfoProperties(
                       modifier: (double value) {
-                        return value.toStringAsFixed(2); // 🔥 DOUBLE VALUE ONLY
+                        return value.toStringAsFixed(2);
                       },
-                      mainLabelStyle: const TextStyle(
-                        fontSize: 30,
+                      mainLabelStyle: TextStyle(
+                        fontSize: context.rText(30),
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF04063E),
+                        color: const Color(0xFF04063E),
                       ),
                       bottomLabelText: "kWh/Sqft",
-                      bottomLabelStyle: const TextStyle(
-                        fontSize: 12,
+                      bottomLabelStyle: TextStyle(
+                        fontSize: context.rText(12),
                         color: Colors.grey,
                         fontWeight: FontWeight.w500,
                       ),
@@ -229,44 +228,59 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
                   ),
                 ),
 
-              // Show the buttons only for Data View
+
               if (!widget.isRevenueView) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: context.rSpace(12)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _radio("Today Data", widget.isToday, widget.onTodayDataPressed),
-                    const SizedBox(width: 24),
-                    _radio("Custom Date Data", !widget.isToday,
-                        widget.onCustomDataPressed),
+                    _radio(
+                      "Today Data",
+                      widget.isToday,
+                      widget.onTodayDataPressed,
+                    ),
+                    SizedBox(width: context.rSpace(24)),
+                    _radio(
+                      "Custom Date Data",
+                      !widget.isToday,
+                      widget.onCustomDataPressed,
+                    ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: context.rSpace(20)),
                 if (!widget.isToday) _buildCustomDatePicker(),
               ],
 
-              const SizedBox(height: 20),
+              SizedBox(height: context.rSpace(20)),
 
-              // Display only relevant view based on the toggle (Revenue or Data View)
-              if (widget.isRevenueView) _buildRevenueView(), // Show Revenue View
-              if (!widget.isRevenueView && (widget.isToday || widget.showData)) _buildEnergyCharts(), // Show Data View
+
+              if (widget.isRevenueView) _buildRevenueView(),
+              if (!widget.isRevenueView &&
+                  (widget.isToday || widget.showData))
+                _buildEnergyCharts(),
+              SizedBox(height: 300,),
             ],
           ),
         ),
+
         Positioned(
           top: 0,
-          left: 16,
-          right: 16,
+          left: context.rSpace(16),
+          right: context.rSpace(16),
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // 🔹 MASK to hide border behind
+
               Container(
-                height: 48,
-                margin: const EdgeInsets.symmetric(horizontal: 6),
+                height: context.rSpace(48),
+                margin: EdgeInsets.symmetric(
+                  horizontal: context.rSpace(6),
+                ),
                 decoration: BoxDecoration(
-                  color: Colors.white, // same as card background
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(
+                    context.rSpace(10),
+                  ),
                 ),
               ),
 
@@ -278,7 +292,6 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
             ],
           ),
         ),
-
       ],
     );
   }
@@ -288,24 +301,24 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
       onTap: onTap,
       child: Row(
         children: [
-          // 🔵 Circle indicator
+
           Container(
-            width: 12,
-            height: 12,
+            width: context.rSpace(12),
+            height: context.rSpace(12),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: selected ? Colors.blue : Colors.grey.shade400,
             ),
           ),
-          const SizedBox(width: 6),
+          SizedBox(width: context.rSpace(6)),
           Text(
             title,
             style: TextStyle(
+              fontSize: context.rText(14),
               fontWeight: FontWeight.w600,
               color: selected
-                  ? const Color(0xFF1296F3) // ACTIVE (BLUE)
-                  : Colors.grey,           // INACTIVE
-            ),
+                  ? const Color(0xFF1296F3)
+                  : Colors.grey,
           ),
         ],
       ),
@@ -314,7 +327,7 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
 
   Widget _buildCustomDatePicker() {
     return Padding(
-      padding: const EdgeInsets.only(left: 18.0),
+      padding: EdgeInsets.only(left: context.rSpace(18)),
       child: Row(
         children: [
           _dateBtn("From Date", () async {
@@ -326,7 +339,7 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
             );
             widget.onCustomDateChanged({'from': d, 'to': widget.toDate});
           }),
-          SizedBox(width: 10,),
+          SizedBox(width: context.rSpace(10)),
           _dateBtn("To Date", () async {
             final d = await showDatePicker(
               context: context,
@@ -336,16 +349,20 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
             );
             widget.onCustomDateChanged({'from': widget.fromDate, 'to': d});
           }),
-          SizedBox(width: 10,),
+          SizedBox(width: context.rSpace(10)),
           GestureDetector(
             onTap: widget.onSearchPressed,
             child: Container(
-              padding: const EdgeInsets.all(7),
+              padding: EdgeInsets.all(context.rSpace(7)),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(context.rSpace(8)),
                 border: Border.all(color: Colors.blue),
               ),
-              child: const Icon(Icons.search, color: Colors.blue),
+              child: Icon(
+                Icons.search,
+                size: context.rSpace(20),
+                color: Colors.blue,
+              ),
             ),
           ),
         ],
@@ -357,16 +374,29 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: EdgeInsets.symmetric(
+          horizontal: context.rSpace(16),
+          vertical: context.rSpace(10),
+        ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(context.rSpace(8)),
           border: Border.all(color: Colors.black26),
         ),
         child: Row(
           children: [
-            Text(label, style: const TextStyle(color: Colors.black26)),
-            const SizedBox(width: 8),
-            const Icon(Icons.calendar_today, size: 18, color: Colors.black26),
+            Text(
+              label,
+              style: TextStyle(
+                color: Colors.black26,
+                fontSize: context.rText(14),
+              ),
+            ),
+            SizedBox(width: context.rSpace(8)),
+            Icon(
+              Icons.calendar_today,
+              size: context.rSpace(18),
+              color: Colors.black26,
+            ),
           ],
         ),
       ),
@@ -377,45 +407,51 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
     final data = getFilteredData();
 
     if (data.isEmpty) {
-      return const Text("No Data Available");
+      return Padding(
+        padding: EdgeInsets.symmetric(vertical: context.rSpace(20)),
+        child: Text(
+          "No Data Available",
+          style: TextStyle(fontSize: context.rText(16)),
+        ),
+      );
     }
 
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: EdgeInsets.all(context.rSpace(8)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(context.rSpace(12)),
         border: Border.all(color: const Color(0xFFB9C7D9)),
       ),
       child: Column(
         children: [
-          // 🔹 STATIC ROW (always on top)
+
           Padding(
-            padding: const EdgeInsets.only(left: 28.0,right: 28),
+            padding: EdgeInsets.symmetric(horizontal: context.rSpace(28)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text(
                   'Energy Chart',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: context.rText(18),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  '5.53 kw',
+                  '5.53 kW',
                   style: TextStyle(
-                    fontSize: 34,
+                    fontSize: context.rText(28),
                     color: Colors.black,
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: context.rSpace(12)),
 
-          // 🔹 DYNAMIC LIST
+
           ...data.map(
                 (e) => EnergyRow(
               title: e.title,
@@ -425,13 +461,13 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
             ),
           ),
         ],
-      )
-
+      ),
     );
   }
 
   Widget _buildRevenueView() {
-    // This will display the revenue view content when Revenue View is selected
+    final scale = context.rScale;
+
     return Column(
       children: [
         SleekCircularSlider(
@@ -441,69 +477,67 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
           appearance: CircularSliderAppearance(
             startAngle: 150,
             angleRange: 240,
-            size: 200,
+            size: 200 * scale, // responsive size
             customWidths: CustomSliderWidths(
-              progressBarWidth: 17,
-              trackWidth: 17,
+              progressBarWidth: 17 * scale,
+              trackWidth: 17 * scale,
             ),
             customColors: CustomSliderColors(
               progressBarColor: const Color(0xFF4E91FD),
               trackColor: Color(0xFFBDF8FE).withOpacity(0.5),
             ),
             infoProperties: InfoProperties(
-              modifier: (double value) {
-                return value.toStringAsFixed(2); // 🔥 DOUBLE VALUE ONLY
-              },
-              mainLabelStyle: const TextStyle(
-                fontSize: 30,
+              modifier: (double value) => value.toStringAsFixed(2),
+              mainLabelStyle: TextStyle(
+                fontSize: context.rText(30),
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF04063E),
+                color: const Color(0xFF04063E),
               ),
               bottomLabelText: "tk",
-              bottomLabelStyle: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
+              bottomLabelStyle: TextStyle(
+                fontSize: context.rText(16),
+                color: Colors.black,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: context.rSpace(20)),
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            //border: Border.all(color: const Color(0xFFB9C7D9)),
+            borderRadius: BorderRadius.circular(12 * scale),
+
           ),
           child: Column(
             children: [
               _revenueRow("Data 1", "2798.50", "35689 ৳"),
-
             ],
           ),
         ),
       ],
     );
   }
-
   Widget _revenueRow(String title, String data, String cost) {
-    bool isExpanded = true; // ✅ MUST be outside builder
+    bool isExpanded = true;
 
     return StatefulBuilder(
       builder: (context, setState) {
+        final scale = context.rScale;
+
         return Stack(
           clipBehavior: Clip.none,
           children: [
 
-            /// 🔹 DATA BOX (only when expanded)
             if (isExpanded)
               Container(
-                margin: const EdgeInsets.only(top: 30),
-                padding: const EdgeInsets.fromLTRB(16, 70, 0, 16),
+                margin: EdgeInsets.only(top: context.rSpace(30)),
+                padding: EdgeInsets.fromLTRB(
+                    context.rSpace(16), context.rSpace(70), context.rSpace(16), context.rSpace(16)),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black26, width: 1.2),
+                  borderRadius: BorderRadius.circular(context.rSpace(10)),
+                  border: Border.all(color: Colors.black26, width: 1.2 * scale),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -516,33 +550,38 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
                 ),
               ),
 
-            /// 🔹 HEADER (always visible)
+
             Positioned(
-              top: 31,
-              left: 1,
-              right: 1,
+              top: context.rSpace(31),
+              left: context.rSpace(1),
+              right: context.rSpace(1),
               child: Container(
-                height: 60,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                height: context.rSpace(60),
+                padding: EdgeInsets.symmetric(horizontal: context.rSpace(12)),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.black26, width: 1.2),
+                  borderRadius: BorderRadius.circular(context.rSpace(8)),
+                  border: Border.all(color: Colors.black26, width: 1.2 * scale),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.bar_chart, color: Colors.black26),
-                    const SizedBox(width: 10),
-                    const Text(
+                    Icon(Icons.bar_chart, color: Colors.black26, size: context.rSpace(20)),
+                    SizedBox(width: context.rSpace(10)),
+                    Text(
                       "Data & Cost Info",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: context.rText(14),
+                      ),
                     ),
-                    const Spacer(),
+                    Spacer(),
 
-                    /// 🔹 TOGGLE BUTTON
+
                     CircleAvatar(
+                      radius: context.rSpace(16),
                       backgroundColor: Colors.blue,
                       child: IconButton(
+                        iconSize: context.rSpace(18),
                         icon: Icon(
                           isExpanded
                               ? Icons.keyboard_double_arrow_up
@@ -566,29 +605,47 @@ class _EnergyMainCardState extends State<EnergyMainCard> {
     );
   }
 
-// Row that will display data and cost for each entry
+
   Widget _dataCostRow(String number, String data, String cost) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: context.rSpace(2)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Data line with data value and percentage
+
           Row(
             children: [
-              Text("Data $number: $data", style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(width: 8),
-              Text("($data%)", style: TextStyle(color: Colors.grey)),
+              Text(
+                "Data $number: $data",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.rText(14),
+                ),
+              ),
+              SizedBox(width: context.rSpace(4)),
+              Text(
+                "($data%)",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: context.rText(12),
+                ),
+              ),
             ],
           ),
-          // Cost line
-          Padding(
-            padding: const EdgeInsets.only(left: 0),
-            child: Row(
-              children: [
-                Text("Cost $number: $cost", style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
-            ),
+
+          SizedBox(height: context.rSpace(2)),
+
+
+          Row(
+            children: [
+              Text(
+                "Cost $number: $cost",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.rText(14),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -603,74 +660,104 @@ class EnergyRow extends StatelessWidget {
   final String title, data, cost;
   final Color color;
 
-  const EnergyRow(
-      {super.key,
-        required this.title,
-        required this.data,
-        required this.cost,
-        required this.color});
+  const EnergyRow({
+    super.key,
+    required this.title,
+    required this.data,
+    required this.cost,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.only(left: 10,right: 10,top: 4,bottom: 4),
+      margin: EdgeInsets.symmetric(vertical: context.rSpace(3)),
+      padding: EdgeInsets.fromLTRB(
+        context.rSpace(10),
+        context.rSpace(4),
+        context.rSpace(10),
+        context.rSpace(4),
+      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(context.rSpace(10)),
         border: Border.all(color: const Color(0xFFB9C7D9)),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center, // Ensure the row items align center
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Column with the Dot and Title
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Vertically center the dot with the text
-            crossAxisAlignment: CrossAxisAlignment.start, // Align dot and title to the left
-            children: [
 
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Padding(
-                padding: const EdgeInsets.only(left: 12.0),
+                padding: EdgeInsets.only(left: context.rSpace(12)),
                 child: CircleAvatar(
-                  radius: 5,
-                  backgroundColor: color, // Dot color
+                  radius: context.rSpace(5),
+                  backgroundColor: color,
                 ),
               ),
-              SizedBox(height: 5), // Spacing between dot and title
+              SizedBox(height: context.rSpace(5)),
               Text(
-                title, // Data A
+                title,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  fontSize: context.rText(14),
                   color: Colors.black,
                 ),
               ),
             ],
           ),
-          SizedBox(width: 10),
-          // Vertical Line (Container with height and width)
+          SizedBox(width: context.rSpace(10)),
+
           Container(
-            width: 1,
-            height: 30, // Adjust this height to match the row height
+            width: context.rSpace(1),
+            height: context.rSpace(30),
             color: Colors.grey.shade400,
           ),
-          SizedBox(width: 10),
-          // Column for Data and Cost (left-aligned)
+          SizedBox(width: context.rSpace(10)),
+
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Text("Data    :  ",style: TextStyle(color: Colors.black26,fontWeight: FontWeight.bold,fontSize: 12
-                  ),),
-                  Text("$data",style: TextStyle(color: Color(0xFF04063E),fontWeight: FontWeight.bold,fontSize: 12
-                  ),),
+                  Text(
+                    "Data    :  ",
+                    style: TextStyle(
+                      color: Colors.black26,
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.rText(12),
+                    ),
+                  ),
+                  Text(
+                    "$data",
+                    style: TextStyle(
+                      color: const Color(0xFF04063E),
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.rText(12),
+                    ),
+                  ),
                 ],
               ),
               Row(
                 children: [
-                  Text("Cost    :",style: TextStyle(color: Colors.black26,fontWeight: FontWeight.bold,fontSize: 12
-                  ),),
-                  Text(" $cost",style: TextStyle(color: Color(0xFF04063E),fontWeight: FontWeight.bold,fontSize: 12
-                  ),),
+                  Text(
+                    "Cost    :",
+                    style: TextStyle(
+                      color: Colors.black26,
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.rText(12),
+                    ),
+                  ),
+                  Text(
+                    " $cost",
+                    style: TextStyle(
+                      color: const Color(0xFF04063E),
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.rText(12),
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -690,23 +777,23 @@ class TopSwitch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 44,
-      padding: const EdgeInsets.all(2),
+      height: context.rSpace(44),
+      padding: EdgeInsets.all(context.rSpace(2)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(context.rSpace(10)),
         border: Border.all(color: const Color(0xFFB9C7D9)),
       ),
       child: Row(
         children: [
-          _item("Data View", !isRevenue, () => onChanged(false)),
-          _item("Revenue View", isRevenue, () => onChanged(true)),
+          _item(context, "Data View", !isRevenue, () => onChanged(false)),
+          _item(context, "Revenue View", isRevenue, () => onChanged(true)),
         ],
       ),
     );
   }
 
-  Widget _item(String t, bool active, VoidCallback onTap) {
+  Widget _item(BuildContext context, String t, bool active, VoidCallback onTap) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -715,30 +802,32 @@ class TopSwitch extends StatelessWidget {
           children: [
 
             Container(
-              width: 14,
-              height: 14,
+              width: context.rSpace(14),
+              height: context.rSpace(14),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color:  active? const Color(0xFF1296F3) : Colors.grey,
+                  color: active ? const Color(0xFF1296F3) : Colors.grey,
+                  width: context.rSpace(1),
                 ),
               ),
               child: active
-                  ? const Center(
+                  ? Center(
                 child: CircleAvatar(
-                  radius: 3,
-                  backgroundColor: Color(0xFF1296F3),
+                  radius: context.rSpace(3),
+                  backgroundColor: const Color(0xFF1296F3),
                 ),
               )
                   : null,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: context.rSpace(8)),
 
-            // Label
+
             Text(
               t,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
+                fontSize: context.rText(14),
                 color: active ? Colors.blue : Colors.grey,
               ),
             ),
@@ -747,6 +836,4 @@ class TopSwitch extends StatelessWidget {
       ),
     );
   }
-
 }
-

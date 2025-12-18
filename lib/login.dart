@@ -60,10 +60,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      /// Pushes bottom container down safely
+
                       const Expanded(child: SizedBox()),
 
-                      /// Bottom container
+
                       Container(
                         width: double.infinity,
                         padding: Responsive.symmetric(
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
 
                             SizedBox(height: context.rSpace(24)),
 
-                            /// Username
+
                             TextField(
                               decoration: InputDecoration(
                                 hintText: 'Username',
@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
 
                             SizedBox(height: context.rSpace(16)),
 
-                            /// Password with visibility toggle
+
                             TextField(
                               obscureText: _obscurePassword,
                               decoration: InputDecoration(
@@ -146,6 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                                   'Forget password?',
                                   style: TextStyle(
                                     fontSize: context.rText(12),
+                                    decoration: TextDecoration.underline
                                   ),
                                 ),
                               ),
@@ -155,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
 
                             SizedBox(height: context.rSpace(12)),
 
-                            /// Login button
+
                             SizedBox(
                               width: double.infinity,
                               height: context.rSpace(58),

@@ -5,6 +5,7 @@ import '../appbar.dart';
 import '../energy_detail_page.dart';
 import '../safe_assets.dart';
 import '../sld_data.dart';
+import '../responsive.dart';
 
 class SCMDashboardPage extends StatefulWidget {
   const SCMDashboardPage({super.key});
@@ -19,8 +20,6 @@ class _SCMDashboardPageState extends State<SCMDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final w = MediaQuery.sizeOf(context).width;
-
     return Scaffold(
       backgroundColor: const Color(0xFFEAF1FB),
       appBar: CustomAppBar(
@@ -31,20 +30,22 @@ class _SCMDashboardPageState extends State<SCMDashboardPage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: w * 0.055),
+          padding: Responsive.horizontal(context, 22),
           child: Column(
             children: [
-              SizedBox(height: 20,),
+              SizedBox(height: context.rSpace(20)),
               Expanded(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(context.rSpace(18)),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: const Color(0xFFB9C7D9)),
                     ),
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.only(bottom: 16),
+                      padding: EdgeInsets.only(
+                        bottom: context.rSpace(16),
+                      ),
                       child: Column(
                         children: [
                           _TopTabs(
@@ -52,21 +53,21 @@ class _SCMDashboardPageState extends State<SCMDashboardPage> {
                             onChanged: (i) =>
                                 setState(() => topTabIndex = i),
                           ),
-SizedBox(height: 4,),
-                          const Text(
+                          SizedBox(height: context.rSpace(4)),
+                          Text(
                             "Electricity",
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: context.rText(16),
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF7B8794),
+                              color: const Color(0xFF7B8794),
                             ),
                           ),
-                          const Divider(height: 25),
+                          Divider(height: context.rSpace(25)),
                           const TotalPowerRing(
                             valueText: "5.53",
                             unitText: "kw",
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: context.rSpace(15)),
                           _SegmentToggle(
                             leftText: "Source",
                             rightText: "Load",
@@ -75,12 +76,16 @@ SizedBox(height: 4,),
                                 setState(() => sourceSelected = v),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 8.0,right: 8),
-                            child: Divider(),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.rSpace(8),
+                            ),
+                            child: const Divider(),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: _ScrollableDataContainer(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.rSpace(10),
+                            ),
+                            child: const _ScrollableDataContainer(),
                           ),
                         ],
                       ),
@@ -88,11 +93,9 @@ SizedBox(height: 4,),
                   ),
                 ),
               ),
-
-              /// 🔹 BOTTOM MENU (STATIC)
-              const Padding(
-                padding: EdgeInsets.all(10),
-                child: _BottomMenuGrid(),
+              Padding(
+                padding: EdgeInsets.all(context.rSpace(10)),
+                child: const _BottomMenuGrid(),
               ),
             ],
           ),
@@ -100,7 +103,6 @@ SizedBox(height: 4,),
       ),
     );
   }
-
 }
 
 
@@ -110,101 +112,61 @@ class _ScrollableDataContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 290, // ✅ shows at least 3 full rows
-      child: Container(
-        decoration: BoxDecoration(
-
-          borderRadius: BorderRadius.circular(14),
-         // border: Border.all(color: const Color(0xFFB9C7D9)),
-        ),
-        child: Scrollbar(
-          thumbVisibility: true,
-          thickness: 4,
-          radius: const Radius.circular(8),
-          child: ListView(
-            padding: const EdgeInsets.all(2),
-            physics: const AlwaysScrollableScrollPhysics(),
-            children:  [
-              _DataCard(
-                iconPath: "assets/dashboard/cell.png",
-                title: "Data View",
-                statusText: "Active",
-                statusColor: Color(0xFF1F6FEB),
-                colorDot: Color(0xFF5AA7FF),
-                data1: "55505.63",
-                data2: "58805.63",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const EnergyDetailPage(title: "Data View"),
-                    ),
-                  );
-                },
-              ),
-              SizedBox(height: 8),
-              _DataCard(
-                iconPath: "assets/dashboard/second.png",
-                title: "Data Type 2",
-                statusText: "Active",
-                statusColor: Color(0xFF1F6FEB),
-                colorDot: Color(0xFFFFA63D),
-                data1: "55505.63",
-                data2: "58805.63",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const EnergyDetailPage(title: "Data View"),
-                    ),
-                  );
-                },
-              ),
-              SizedBox(height: 8),
-              _DataCard(
-                iconPath: "assets/dashboard/grid.png",
-                title: "Data Type 3",
-                statusText: "Inactive",
-                statusColor: Color(0xFFD32F2F),
-                colorDot: Color(0xFF5AA7FF),
-                data1: "55505.63",
-                data2: "58805.63",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const EnergyDetailPage(title: "Data View"),
-                    ),
-                  );
-                },
-              ),
-              _DataCard(
-                iconPath: "assets/dashboard/cell.png",
-                title: "Data View",
-                statusText: "Active",
-                statusColor: Color(0xFF1F6FEB),
-                colorDot: Color(0xFF5AA7FF),
-                data1: "55505.63",
-                data2: "58805.63",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const EnergyDetailPage(title: "Data View"),
-                    ),
-                  );
-                },
-              ),
-
-            ],
-          ),
+      height: context.rSpace(290),
+      child: Scrollbar(
+        thumbVisibility: true,
+        thickness: context.rSpace(4),
+        radius: Radius.circular(context.rSpace(8)),
+        child: ListView(
+          padding: EdgeInsets.all(context.rSpace(2)),
+          physics: const AlwaysScrollableScrollPhysics(),
+          children: [
+            _buildCard(context, "assets/dashboard/cell.png", "Data View",
+                "Active", const Color(0xFF1F6FEB), const Color(0xFF5AA7FF)),
+            SizedBox(height: context.rSpace(8)),
+            _buildCard(context, "assets/dashboard/second.png", "Data Type 2",
+                "Active", const Color(0xFF1F6FEB), const Color(0xFFFFA63D)),
+            SizedBox(height: context.rSpace(8)),
+            _buildCard(context, "assets/dashboard/grid..png", "Data Type 3",
+                "Inactive", const Color(0xFFD32F2F), const Color(0xFF5AA7FF)),
+            SizedBox(height: context.rSpace(8)),
+            _buildCard(context, "assets/dashboard/cell.png", "Data View",
+                "Active", const Color(0xFF1F6FEB), const Color(0xFF5AA7FF)),
+          ],
         ),
       ),
     );
   }
+
+  Widget _buildCard(
+      BuildContext context,
+      String icon,
+      String title,
+      String status,
+      Color statusColor,
+      Color dotColor,
+      ) {
+    return _DataCard(
+      iconPath: icon,
+      title: title,
+      statusText: status,
+      statusColor: statusColor,
+      colorDot: dotColor,
+      data1: "55505.63",
+      data2: "58805.63",
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const EnergyDetailPage(title: "Data View"),
+          ),
+        );
+      },
+    );
+  }
 }
 
-/// ==================== TOP TABS ====================
+
 class _TopTabs extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onChanged;
@@ -215,46 +177,42 @@ class _TopTabs extends StatelessWidget {
   Widget build(BuildContext context) {
     final labels = ["Summery", "SLD", "Data"];
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 0,right: 0),
-      child: Container(
-        height: 42,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: const Color(0xFFB9C7D9)),
-        ),
-        child: Row(
-          children: List.generate(labels.length, (i) {
-            final selected = i == selectedIndex;
-            return Expanded(
-              child: GestureDetector(
-                onTap: () => onChanged(i),
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: selected ? const Color(0xFF1296F3) : null,
-                    borderRadius: BorderRadius.circular(9),
-                  ),
-                  child: Text(
-                    labels[i],
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: selected ? Colors.white : Colors.grey,
-                    ),
+    return Container(
+      height: context.rSpace(42),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(context.rSpace(10)),
+        border: Border.all(color: const Color(0xFFB9C7D9)),
+      ),
+      child: Row(
+        children: List.generate(labels.length, (i) {
+          final selected = i == selectedIndex;
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => onChanged(i),
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: selected ? const Color(0xFF1296F3) : null,
+                  borderRadius: BorderRadius.circular(context.rSpace(9)),
+                ),
+                child: Text(
+                  labels[i],
+                  style: TextStyle(
+                    fontSize: context.rText(14),
+                    fontWeight: FontWeight.w600,
+                    color: selected ? Colors.white : Colors.grey,
                   ),
                 ),
               ),
-            );
-          }),
-        ),
+            ),
+          );
+        }),
       ),
     );
   }
 }
 
 
-/// ==================== SOURCE / LOAD TOGGLE ====================
 class _SegmentToggle extends StatelessWidget {
   final String leftText;
   final String rightText;
@@ -271,26 +229,28 @@ class _SegmentToggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36),
+      padding: EdgeInsets.symmetric(horizontal: context.rSpace(36)),
       child: Container(
-        height: 34,
+        height: context.rSpace(34),
         decoration: BoxDecoration(
           color: const Color(0xFFE8EEF7),
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(context.rSpace(22)),
           border: Border.all(color: const Color(0xFFD5DEEA)),
         ),
         child: Stack(
           children: [
             AnimatedAlign(
               duration: const Duration(milliseconds: 180),
-              alignment:
-              isLeftSelected ? Alignment.centerLeft : Alignment.centerRight,
+              alignment: isLeftSelected
+                  ? Alignment.centerLeft
+                  : Alignment.centerRight,
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.38,
-                height: 44,
+                width:
+                MediaQuery.sizeOf(context).width * 0.38 * context.rScale,
+                height: context.rSpace(44),
                 decoration: BoxDecoration(
                   color: const Color(0xFF1296F3),
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius: BorderRadius.circular(context.rSpace(22)),
                 ),
               ),
             ),
@@ -303,7 +263,7 @@ class _SegmentToggle extends StatelessWidget {
                       child: Text(
                         leftText,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: context.rText(14),
                           fontWeight: FontWeight.w600,
                           color: isLeftSelected
                               ? Colors.white
@@ -320,7 +280,7 @@ class _SegmentToggle extends StatelessWidget {
                       child: Text(
                         rightText,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: context.rText(14),
                           fontWeight: FontWeight.w600,
                           color: !isLeftSelected
                               ? Colors.white
@@ -339,7 +299,7 @@ class _SegmentToggle extends StatelessWidget {
   }
 }
 
-/// ==================== DATA CARD ====================
+
 class _DataCard extends StatelessWidget {
   final String iconPath;
   final String title;
@@ -348,7 +308,7 @@ class _DataCard extends StatelessWidget {
   final Color colorDot;
   final String data1;
   final String data2;
-  final VoidCallback onTap; // 👈 NEW
+  final VoidCallback onTap;
 
   const _DataCard({
     required this.iconPath,
@@ -364,67 +324,69 @@ class _DataCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(12),
       onTap: onTap,
+      borderRadius: BorderRadius.circular(context.rSpace(12)),
       child: Container(
-        height: 66,
+        height: context.rSpace(70),
         decoration: BoxDecoration(
           color: const Color(0xFFEFF6FF),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(context.rSpace(12)),
           border: Border.all(color: const Color(0xFFB9C7D9)),
         ),
         child: Row(
           children: [
-            const SizedBox(width: 10),
+            SizedBox(width: context.rSpace(10)),
             SafeAssetIcon(
               path: iconPath,
-              size: 24,
+              size: context.rSpace(24),
               fallbackIcon: Icons.insert_chart_outlined,
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: context.rSpace(10)),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 3),
+                padding: EdgeInsets.symmetric(vertical: context.rSpace(3)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         Container(
-                          width: 14,
-                          height: 14,
+                          width: context.rSpace(14),
+                          height: context.rSpace(14),
                           decoration: BoxDecoration(
                             color: colorDot,
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius:
+                            BorderRadius.circular(context.rSpace(4)),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: context.rSpace(8)),
                         Text(
                           title,
-                          style: const TextStyle(
-                            fontSize: 14,
+                          style: TextStyle(
+                            fontSize: context.rText(14),
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        SizedBox(width: context.rSpace(6)),
                         Text(
                           "($statusText)",
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: context.rText(10),
                             color: statusColor,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: context.rSpace(4)),
                     _DataRow(label: "Data 1", value: data1),
                     _DataRow(label: "Data 2", value: data2),
                   ],
                 ),
               ),
             ),
-            const Icon(Icons.chevron_right_rounded),
-            const SizedBox(width: 8),
+            Icon(Icons.chevron_right_rounded,
+                size: context.rSpace(22)),
+            SizedBox(width: context.rSpace(8)),
           ],
         ),
       ),
@@ -442,11 +404,13 @@ class _DataRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        const SizedBox(width: 6),
+        Text(label,
+            style: TextStyle(
+                fontSize: context.rText(12), color: Colors.grey)),
+        SizedBox(width: context.rSpace(6)),
         const Text(":"),
-        const SizedBox(width: 6),
-        Text(value, style: const TextStyle(fontSize: 12)),
+        SizedBox(width: context.rSpace(6)),
+        Text(value, style: TextStyle(fontSize: context.rText(12))),
       ],
     );
   }
@@ -454,10 +418,7 @@ class _DataRow extends StatelessWidget {
 
 
 void _openPage(BuildContext context, Widget page) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (_) => page),
-  );
+  Navigator.push(context, MaterialPageRoute(builder: (_) => page));
 }
 
 class _BottomMenuGrid extends StatelessWidget {
@@ -467,77 +428,50 @@ class _BottomMenuGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: _MenuButton(
-                iconPath: "assets/dashboard/analysis.png",
-                label: "Analysis Pro",
-                onTap: () => _openPage(context, const SldDataPage()),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _MenuButton(
-                iconPath: "assets/dashboard/generator.png",
-                label: "G. Generator",
-                onTap: () => _openPage(context, const SldDataPage()),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 7),
+        _row(context, "analysis.png", "Analysis Pro", "generator.png",
+            "G. Generator"),
+        SizedBox(height: context.rSpace(7)),
+        _row(context, "plant.png", "Plant Summery", "gas.png", "Natural Gas"),
+        SizedBox(height: context.rSpace(7)),
+        _row(context, "generator.png", "D. Generator", "water.png",
+            "Water Process"),
+      ],
+    );
+  }
 
-        Row(
-          children: [
-            Expanded(
-              child: _MenuButton(
-                iconPath: "assets/dashboard/plant.png",
-                label: "Plant Summery",
-                onTap: () => _openPage(context, const SldDataPage()),
-              ),
-            ),
-            const SizedBox(width: 7),
-            Expanded(
-              child: _MenuButton(
-                iconPath: "assets/dashboard/gas.png",
-                label: "Natural Gas",
-                onTap: () => _openPage(context, const SldDataPage()),
-              ),
-            ),
-          ],
+  Widget _row(
+      BuildContext context,
+      String i1,
+      String l1,
+      String i2,
+      String l2,
+      ) {
+    return Row(
+      children: [
+        Expanded(
+          child: _MenuButton(
+            iconPath: "assets/dashboard/$i1",
+            label: l1,
+            onTap: () => _openPage(context, const SldDataPage()),
+          ),
         ),
-        const SizedBox(height: 7),
-
-        Row(
-          children: [
-            Expanded(
-              child: _MenuButton(
-                iconPath: "assets/dashboard/generator.png",
-                label: "D. Generator",
-                onTap: () => _openPage(context, const SldDataPage()),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _MenuButton(
-                iconPath: "assets/dashboard/water.png",
-                label: "Water Process",
-                onTap: () => _openPage(context, const SldDataPage()),
-              ),
-            ),
-          ],
+        SizedBox(width: context.rSpace(10)),
+        Expanded(
+          child: _MenuButton(
+            iconPath: "assets/dashboard/$i2",
+            label: l2,
+            onTap: () => _openPage(context, const SldDataPage()),
+          ),
         ),
       ],
     );
-
   }
 }
 
 class _MenuButton extends StatelessWidget {
   final String iconPath;
   final String label;
-  final VoidCallback? onTap; // <-- new property
+  final VoidCallback? onTap;
 
   const _MenuButton({
     required this.iconPath,
@@ -549,23 +483,30 @@ class _MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(context.rSpace(14)),
       child: Container(
-        height: 43,
+        height: context.rSpace(43),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(context.rSpace(14)),
           border: Border.all(color: const Color(0xFFB9C7D9)),
         ),
         child: Row(
           children: [
-            const SizedBox(width: 10),
-            SafeAssetIcon(path: iconPath, size: 24, fallbackIcon: Icons.widgets),
-            const SizedBox(width: 10),
+            SizedBox(width: context.rSpace(10)),
+            SafeAssetIcon(
+              path: iconPath,
+              size: context.rSpace(24),
+              fallbackIcon: Icons.widgets,
+            ),
+            SizedBox(width: context.rSpace(10)),
             Expanded(
               child: Text(
                 label,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  fontSize: context.rText(14),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
